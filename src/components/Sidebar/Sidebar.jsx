@@ -3,34 +3,41 @@ import './Sidebar.css';
 import {assets} from '../../assets/assets';
 
 const Sidebar = () => {
+
+    const [extended , setExtended] = React.useState(false);
+
+    const handleExtend = () => {
+        setExtended(!extended);
+    }
+
   return (
     <div className='sidebar'>
         <div className="top">
-            <img src={assets.menu_icon} className='menu' alt="" />
+            <img src={assets.menu_icon} className='menu' alt="" onClick={handleExtend}/>
             <div className="new-chat">
                 <img src={assets.plus_icon} alt="" />
-                <p>New Chat</p>
+                {extended? <p>New Chat</p> : null}
             </div>
-            <div className="recent">
+            {extended? <div className="recent">
                 <p className="recent-title">Recent</p>
                 <p className="recent-entry">
                     <img src={assets.message_icon} alt="" />
                     <p>What is react ...</p>
                 </p>
-            </div>
+            </div> : null}
         </div>
         <div className="bottom">
             <div className="bottom-item recent-entry">
                 <img src={assets.question_icon} alt="" />
-                <p>Help</p>
+                {extended? <p>Help</p> : null}
             </div>
             <div className="bottom-item recent-entry">
                 <img src={assets.history_icon} alt="" />
-                <p>Activity</p>
+                {extended? <p>History</p> : null}
             </div>
             <div className="bottom-item recent-entry">
                 <img src={assets.setting_icon} alt="" />
-                <p>Settings</p>
+                {extended? <p>Settings</p> : null}
             </div>
         </div>
     </div>
