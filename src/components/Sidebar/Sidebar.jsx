@@ -11,7 +11,7 @@ const Sidebar = () => {
     }
 
   return (
-    <div className='sidebar'>
+    <div className={`sidebar ${extended ? 'extended' : 'collapsed'}`}>
         <div className="top">
             <img src={assets.menu_icon} className='menu' alt="" onClick={handleExtend}/>
             <div className="new-chat">

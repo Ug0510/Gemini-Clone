@@ -1,11 +1,18 @@
-.sidebar{
+.sidebar {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: #f0f4f9;
-    width: fit-content;
+    width: 80px;
     padding: 25px 15px;
+    transition: width 0.3s ease, padding 0.3s ease; /* Smooth transition */
+    overflow: hidden; /* Hide overflow content when collapsed */
+}
+
+.sidebar.extended {
+    width: 20vw;
+    /* padding: 25px 15px 25px 25px; Adjust padding when expanded */
 }
 
 .sidebar img{
@@ -14,7 +21,7 @@
 
 .sidebar .menu{
     display: block;
-    margin-left: 10px;
+    margin-left: 15px;
     cursor: pointer;
 }
 
