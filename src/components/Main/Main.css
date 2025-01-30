@@ -172,3 +172,24 @@
     }
     
 }
+
+@media screen and (max-width:600px) {
+    .main .greet{
+        margin:10px 0px;
+    }
+    .main-bottom input{
+        flex: 1;
+    }
+    .main-bottom img{
+        width: 20px;;
+    }
+    .search-box {
+        padding: 5px 10px;
+    }
+    .search-box div{
+        gap: 5px;
+    }
+    .main .card{
+        height: 180px;
+    }
+}
