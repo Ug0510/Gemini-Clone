@@ -4,15 +4,7 @@
     flex-direction: column;
     justify-content: space-between;
     background-color: #f0f4f9;
-    width: 80px;
     padding: 25px 15px;
-    transition: width 0.3s ease, padding 0.3s ease; /* Smooth transition */
-    overflow: hidden; /* Hide overflow content when collapsed */
-}
-
-.sidebar.extended {
-    width: 22vw;
-    /* padding: 25px 15px 25px 25px; Adjust padding when expanded */
 }
 
 .sidebar img{
@@ -41,6 +33,7 @@
 .sidebar .recent{
     display: flex;
     flex-direction: column;   
+    animation: fadeIn 1.5s;
 }
 
 .sidebar .recent-title{
