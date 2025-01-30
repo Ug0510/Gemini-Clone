@@ -9,4 +9,13 @@
     min-height: 100vh;
     background-color: white;
     display: flex;
+    animation: fadeIn 1.5s ;
+}
+@keyframes fadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
 }
