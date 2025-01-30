@@ -141,6 +141,11 @@
     align-items: start;
     gap:20px;
 }
+.result-data p{
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.8;
+}
 
 /* Writing Css for the loader */
 .loader{
