@@ -61,6 +61,10 @@
 .sidebar .recent-entry:hover{
     background-color: #e2e6eb;
 }
+.sidebar .recent-entry.active {
+    background-color: #d3e3fd;
+    color: #0842a0;
+}
 .sidebar .bottom {
     display: flex;
     flex-direction: column;
