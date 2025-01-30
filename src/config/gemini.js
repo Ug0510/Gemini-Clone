@@ -8,7 +8,7 @@ const apiKey = 'AIzaSyAXbD-E9TA9POdzUbibyXwr39x63ZMZq80';
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
 });
 
 const generationConfig = {
@@ -27,7 +27,6 @@ async function run(prompt) {
   });
 
   const result = await chatSession.sendMessage(prompt);
-  console.count('result');
   return result.response.text();
 }
 
