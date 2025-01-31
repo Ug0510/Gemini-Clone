@@ -1,6 +1,6 @@
 # 🌌 Gemini Clone - AI-Powered Chat Interface
 
-![Project Banner](https://via.placeholder.com/1024x400.png?text=Gemini+Clone+Showcase) <!-- Add your project screenshot here -->
+https://github.com/user-attachments/assets/3936424f-c473-49ce-af17-4330faf5463a
 
 An intelligent chatbot interface powered by Google's Gemini GenAI API, featuring modern UI/UX design and seamless cloud synchronization.
 
@@ -47,7 +47,7 @@ An intelligent chatbot interface powered by Google's Gemini GenAI API, featuring
 ### Installation
 1. Clone the repository
    ```bash
-   git clone https://github.com/your-username/gemini-clone.git
+   git clone https://github.com/Ug0510/Gemini-Clone.git
    
 2. Install dependencies
     ```bash
@@ -55,8 +55,7 @@ An intelligent chatbot interface powered by Google's Gemini GenAI API, featuring
     
 3. Set up environment variables
      ```bash
-    REACT_APP_FIREBASE_CONFIG='your-firebase-config'
-    REACT_APP_GEMINI_API_KEY='your-api-key'
+    VITE_GEMINI_API_KEY='your-api-key'
      
 5. Start development server
      ```bash
