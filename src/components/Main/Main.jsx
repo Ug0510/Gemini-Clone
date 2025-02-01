@@ -13,6 +13,16 @@ const Main = () => {
     }
     ,[]);
 
+    const messagesEndRef = React.useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    useEffect(() => {
+      scrollToBottom();
+    }, [chatHistory,resultData]);
+
     return (
         <div className='main'>
             <div className="nav">
@@ -96,6 +106,7 @@ const Main = () => {
                                     loadingHistory ? <p dangerouslySetInnerHTML={{__html:chatHistory[chatHistory.length - 1].parts[0].text}}></p> : <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
                             }
                         </div>
+                        <div ref={messagesEndRef} />
                     </div>
 
                 }

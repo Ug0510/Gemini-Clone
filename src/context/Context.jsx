@@ -21,7 +21,7 @@ const ContextProvider = (props) => {
     {
         setTimeout(() => {
             setResultData((prev) => prev + nextWord);
-        }, 0 * index);
+        }, 50 * index);
     };
 
     const loadChat = (chatId) => {
