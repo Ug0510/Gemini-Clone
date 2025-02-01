@@ -6,14 +6,7 @@ import { Context } from '../../context/Context';
 const Sidebar = () => {
 
     const [extended , setExtended] = React.useState(false);
-    const {onSent , prevPrompt, setRecentPrompt, newChat } = React.useContext(Context);
-
-    const loadPrompt = async (prompt) => {
-        setRecentPrompt(prompt);
-        await onSent(prompt);
-    }
-
-
+    const {newChat, currentChatId, chats, loadChat } = React.useContext(Context);
 
   return (
     <div className={`sidebar`}>
@@ -26,12 +19,13 @@ const Sidebar = () => {
             {extended? <div className="recent">
                 <p className="recent-title">Recent</p>
                 {
-                    prevPrompt.map((prompt, index) => {
+                    chats.map((chat, index) => {
                         return (
-                        <div className="recent-entry" key={index} onClick={() => loadPrompt(prompt)}>
+                            <div className={`recent-entry ${chat.chatId === currentChatId ? "active" : ''} `} key={chat.chatId} onClick={() => loadChat(chat.chatId)}>
                             <img src={assets.message_icon} alt="" />
-                            <p>{prompt.length <= 30? prompt : prompt.slice(0,28) + "..."}</p>
-                        </div>);
+                            <p>{chat['title'].length <= 30? chat['title'] : chat['title'].slice(0,28) + "..."}</p>
+                        </div>
+                        );
                     })
                 }
                 

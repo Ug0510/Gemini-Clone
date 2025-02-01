@@ -19,14 +19,15 @@ const generationConfig = {
   responseMimeType: "text/plain",
 };
 
-async function run(prompt) {
+async function run(prompt, chatHistory = []) {
+
   const chatSession = model.startChat({
     generationConfig,
-    history: [
-    ],
+    history: chatHistory
   });
 
   const result = await chatSession.sendMessage(prompt);
+
   return result.response.text();
 }
 
