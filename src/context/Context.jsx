@@ -1,7 +1,6 @@
 import run from '../config/gemini';
 import { createContext, useState } from "react";
 export const Context = createContext();
-import { textFormatter } from '../utils/TextFormatter';
 
 const ContextProvider = (props) => {
 
@@ -21,7 +20,7 @@ const ContextProvider = (props) => {
     {
         setTimeout(() => {
             setResultData((prev) => prev + nextWord);
-        }, 50 * index);
+        }, 25 * index);
     };
 
     const loadChat = (chatId) => {
@@ -73,7 +72,7 @@ const ContextProvider = (props) => {
             response = await run(userInput,chatHistory);
         
     
-        let newResponseArr = textFormatter(response);
+        let newResponseArr = response;
 
         
         let newResponseArray = newResponseArr.split(" ");
