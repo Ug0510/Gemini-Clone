@@ -163,6 +163,12 @@
     height: 20px;
     animation:loader 3s infinite linear;
 }
+
+/* Disable send button when result is generating  */
+.send-btn.disable{
+    cursor: not-allowed;
+}
+
 @keyframes loader {
     0%{
         background-position: -800px 0px;

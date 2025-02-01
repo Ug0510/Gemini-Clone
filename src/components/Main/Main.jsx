@@ -6,12 +6,12 @@ import { use } from 'react';
 
 const Main = () => {
 
-    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory} = useContext(Context);
+    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory } = useContext(Context);
 
     useEffect(() => {
         newChat();
     }
-    ,[]);
+        , []);
 
     const messagesEndRef = React.useRef(null);
 
@@ -20,8 +20,8 @@ const Main = () => {
     };
 
     useEffect(() => {
-      scrollToBottom();
-    }, [chatHistory,resultData]);
+        scrollToBottom();
+    }, [chatHistory, resultData]);
 
     return (
         <div className='main'>
@@ -63,35 +63,34 @@ const Main = () => {
                                     if (chat.role === "user") {
                                         return (<div className="result-title" key={index}>
                                             <img src={assets.user_icon} alt="" />
-                                            <p dangerouslySetInnerHTML={{__html:chat.parts[0].text}}></p>
+                                            <p dangerouslySetInnerHTML={{ __html: chat.parts[0].text }}></p>
                                         </div>);
                                     }
                                     else if (chat.role === "model") {
                                         return (<div className="result-data" key={index}>
                                             <img src={assets.gemini_icon} alt="" />
-                                            <p dangerouslySetInnerHTML={{__html:chat.parts[0].text}}></p>
+                                            <p dangerouslySetInnerHTML={{ __html: chat.parts[0].text }}></p>
                                         </div>);
                                     }
                                 }
-                                if(index >= chatHistory.length - 2 && loading)
-                                {
+                                if (index >= chatHistory.length - 2 && loading) {
                                     if (chat.role === "user") {
                                         return (<div className="result-title" key={index}>
                                             <img src={assets.user_icon} alt="" />
-                                            <p dangerouslySetInnerHTML={{__html:chat.parts[0].text}}></p>
+                                            <p dangerouslySetInnerHTML={{ __html: chat.parts[0].text }}></p>
                                         </div>);
                                     }
                                     else if (chat.role === "model") {
                                         return (<div className="result-data" key={index}>
                                             <img src={assets.gemini_icon} alt="" />
-                                            <p dangerouslySetInnerHTML={{__html:chat.parts[0].text}}></p>
+                                            <p dangerouslySetInnerHTML={{ __html: chat.parts[0].text }}></p>
                                         </div>);
                                     }
                                 }
                             })) : null}
                         <div className="result-title">
                             <img src={assets.user_icon} alt="" />
-                            { loadingHistory ? <p dangerouslySetInnerHTML={{__html:chatHistory[chatHistory.length - 2].parts[0].text}}></p> :<p>{recentPrompt}</p>}
+                            {loadingHistory ? <p dangerouslySetInnerHTML={{ __html: chatHistory[chatHistory.length - 2].parts[0].text }}></p> : <p>{recentPrompt}</p>}
                         </div>
                         <div className="result-data">
                             <img src={assets.gemini_icon} alt="" />
@@ -103,7 +102,7 @@ const Main = () => {
                                         <hr />
                                     </div>
                                     :
-                                    loadingHistory ? <p dangerouslySetInnerHTML={{__html:chatHistory[chatHistory.length - 1].parts[0].text}}></p> : <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
+                                    loadingHistory ? <p dangerouslySetInnerHTML={{ __html: chatHistory[chatHistory.length - 1].parts[0].text }}></p> : <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
                             }
                         </div>
                         <div ref={messagesEndRef} />
@@ -113,13 +112,25 @@ const Main = () => {
 
                 <div className="main-bottom">
                     <div className="search-box">
-                        <input type="text" placeholder='Enter a prompt here' onChange={(e) => setInput(e.target.value)} value={input} onKeyDown={(e) => e.key === "Enter" && input.trim().length > 1 ? onSent() : null} />
+                        <input
+                            type="text"
+                            placeholder='Enter a prompt here'
+                            onChange={(e) => setInput(e.target.value)}
+                            value={input}
+                            onKeyDown={(e) => e.key === "Enter" && input.trim().length > 1 && !loading ? onSent() : null}
+                        />
                         <div>
                             <img src={assets.gallery_icon} alt="" />
                             <img src={assets.mic_icon} alt="" />
-                            {input.trim().length > 1 ? <img src={assets.send_icon} alt="" onClick={() => onSent()} /> : null}
+                            <img
+                                src={assets.send_icon}
+                                alt=""
+                                onClick={() => { if (input.trim().length > 1 && !loading) onSent(); }}
+                                className={loading || input.trim().length < 2 ? 'send-btn disable' : ''}
+                            />
                         </div>
                     </div>
+
 
                     <div className="bottom-info">
                         Gemini may display inaccurate info, including about people , so double check its reponse. Your privacy and Gemini Apps
