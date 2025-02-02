@@ -32,6 +32,11 @@ const ContextProvider = (props) => {
         setChatHistory(JSON.parse(history));
     }
 
+    const loadAllChats = () => {
+        const allChats = localStorage.getItem("gemini-all-chats") || '[]';
+        setChats(JSON.parse(allChats));
+    }
+
     const newChat = () => {
         setLoadingHistory(false);
         setLoading(false);
@@ -51,7 +56,6 @@ const ContextProvider = (props) => {
         setInput('');
 
         let finded = false;
-        console.log(chats);
         chats.forEach(chat => {
             if (chat.chatId == currentChatId)
                 finded = true;
@@ -63,6 +67,7 @@ const ContextProvider = (props) => {
                 chatId: currentChatId,
                 title: userInput
             });
+            localStorage.setItem("gemini-all-chats",JSON.stringify(chats));
         }
 
 
@@ -104,6 +109,7 @@ const ContextProvider = (props) => {
         loadChat,
         currentChatId,
         chats,
+        loadAllChats,
         loadingHistory
     }
 

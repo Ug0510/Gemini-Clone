@@ -239,7 +239,7 @@
 .ug-bold{
     font-weight: 400 !important;
 }
-.ug-code {
+.ug-code,code {
     background-color: #F0F4F8;
     border-radius: 3px;
     padding:0 5px;
