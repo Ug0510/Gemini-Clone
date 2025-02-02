@@ -4,10 +4,10 @@ export const Context = createContext();
 
 const ContextProvider = (props) => {
 
-    const [input , setInput] = useState("");
+    const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
     const [prevPrompt, setPrevPrompt] = useState([]);
-    const [showResult,setShowResult] = useState(false);
+    const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
@@ -16,8 +16,7 @@ const ContextProvider = (props) => {
     const [maxChatId, setMaxChatId] = useState(-1);
     const [loadingHistory, setLoadingHistory] = useState(false);
 
-    const delayPara = (index,nextWord) => 
-    {
+    const delayPara = (index, nextWord) => {
         setTimeout(() => {
             setResultData((prev) => prev + nextWord);
         }, 25 * index);
@@ -50,41 +49,41 @@ const ContextProvider = (props) => {
         let response = "";
         let userInput = input;
         setInput('');
-        
-            let finded = false;
-            console.log(chats);
-            chats.forEach(chat => {
-                if(chat.chatId == currentChatId)
-                    finded = true;
-            })
 
-            if(!finded)
-            {
-                setPrevPrompt(prev => [...prev, input]);
-                chats.push({
-                    chatId: currentChatId,
-                    title: userInput
-                });
-            }
+        let finded = false;
+        console.log(chats);
+        chats.forEach(chat => {
+            if (chat.chatId == currentChatId)
+                finded = true;
+        })
+
+        if (!finded) {
+            setPrevPrompt(prev => [...prev, input]);
+            chats.push({
+                chatId: currentChatId,
+                title: userInput
+            });
+        }
 
 
-            setRecentPrompt(userInput);
-            response = await run(userInput,chatHistory);
-        
-    
-        let newResponseArr = response;
+        setRecentPrompt(userInput);
+        response = await run(userInput, chatHistory);
 
-        
+        // Remove the first word wrapped in triple backticks and any spaces after it
+        let cleanedString = response.replace(/^```(\w+)\s*/, '');
+
+        // Remove triple backticks at the start or end of the string
+        let newResponseArr = cleanedString.replace(/^```|```$/g, '');;
+
         let newResponseArray = newResponseArr.split(" ");
 
-        for(let i = 0; i < newResponseArray.length; i++)
-        {
+        for (let i = 0; i < newResponseArray.length; i++) {
             const nextWord = newResponseArray[i];
-            delayPara(i,nextWord+" ");
+            delayPara(i, nextWord + " ");
         }
         setLoading(false);
         chatHistory.pop();
-        chatHistory.push({role: "model", parts: [{text: newResponseArr}]});
+        chatHistory.push({ role: "model", parts: [{ text: newResponseArr }] });
         console.log(chatHistory);
         localStorage.setItem(`chatHistory${currentChatId}`, JSON.stringify(chatHistory));
     }
@@ -109,9 +108,9 @@ const ContextProvider = (props) => {
     }
 
     return (
-    <Context.Provider value={contextValue}>
-        {props.children}
-    </Context.Provider>);
+        <Context.Provider value={contextValue}>
+            {props.children}
+        </Context.Provider>);
 }
 
 export default ContextProvider;

@@ -203,6 +203,7 @@ if writing big chunk of code use code-box class and also code-title to write wha
 Conclusion:
 Ensure that all responses follow these guidelines to maintain consistency and provide a better experience for users interacting with your chatbot. Proper formatting enhances the visual appeal and improves content comprehension.
 
-Don't use markdown directly in the response. Instead, use the custom tags or html tags provided to ensure proper formatting and consistency in the chatbot responses.`;
+Don't use markdown directly in the response. Instead, use the custom tags or html tags provided to ensure proper formatting and consistency in the chatbot responses.
+`;
 
 export { systemInstructionPrompt };
