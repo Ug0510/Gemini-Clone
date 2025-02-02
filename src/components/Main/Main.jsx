@@ -5,12 +5,13 @@ import { Context } from '../../context/Context';
 
 const Main = () => {
 
-    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory } = useContext(Context);
+    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory,loadAllChats } = useContext(Context);
 
     useEffect(() => {
+        // localStorage.clear();
+        loadAllChats();
         newChat();
-    }
-        , []);
+    }, []);
 
     const messagesEndRef = React.useRef(null);
 

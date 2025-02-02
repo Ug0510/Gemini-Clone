@@ -6,11 +6,7 @@ import { Context } from '../../context/Context';
 const Sidebar = () => {
 
     const [extended , setExtended] = React.useState(false);
-    const {newChat, currentChatId, chats, loadChat, loadAllChats } = React.useContext(Context);
-
-    useEffect(()=> {
-        loadAllChats();
-    },[]);
+    const {newChat, currentChatId, chats, loadChat } = React.useContext(Context);
 
 
   return (

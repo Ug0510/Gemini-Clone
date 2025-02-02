@@ -34,6 +34,8 @@ const ContextProvider = (props) => {
 
     const loadAllChats = () => {
         const allChats = localStorage.getItem("gemini-all-chats") || '[]';
+        const maxChatId = Number(localStorage.getItem("gemini-max-chat-id") || '0');
+        setMaxChatId(maxChatId);
         setChats(JSON.parse(allChats));
     }
 
@@ -41,8 +43,10 @@ const ContextProvider = (props) => {
         setLoadingHistory(false);
         setLoading(false);
         setShowResult(false);
-        setCurrentChatId(maxChatId + 1);
-        setMaxChatId(maxChatId + 1);
+        const maxId = Number(localStorage.getItem('gemini-max-chat-id') || '0');
+        setCurrentChatId(maxId + 1);
+        setMaxChatId(maxId + 1);
+        localStorage.setItem("gemini-max-chat-id",maxId + 1);
         setChatHistory([]);
     }
 
