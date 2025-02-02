@@ -200,6 +200,8 @@ Also take care about this that the code to written inside any code and pre tag m
 
 if writing big chunk of code use code-box class and also code-title to write what language code is this
 
+For writing normal text use <span class="ug-bold"> tag in betweeen to highlight those important things 
+
 Conclusion:
 Ensure that all responses follow these guidelines to maintain consistency and provide a better experience for users interacting with your chatbot. Proper formatting enhances the visual appeal and improves content comprehension.
 
