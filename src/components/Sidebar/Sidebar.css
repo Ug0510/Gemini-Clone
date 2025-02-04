@@ -34,6 +34,8 @@
     display: flex;
     flex-direction: column;   
     animation: fadeIn 1.5s;
+    max-height: 60vh;
+    overflow: auto;
 }
 
 .sidebar .recent-title{
