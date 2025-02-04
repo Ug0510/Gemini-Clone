@@ -2,16 +2,23 @@ import React, { useContext, useEffect } from 'react';
 import './Main.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
+import Toast from '../Toast/Toast';
 
 const Main = () => {
 
-    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory,loadAllChats } = useContext(Context);
+    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory,loadAllChats,toast,showToast } = useContext(Context);
 
     useEffect(() => {
         // localStorage.clear();
         loadAllChats();
         newChat();
     }, []);
+
+    const [showTheToast, setShowTheToast] = React.useState(false);
+
+    useEffect(() => {
+        setShowTheToast(toast.visible); // Update local state when toast.visible changes
+    }, [toast.visible]); 
 
     const messagesEndRef = React.useRef(null);
 
@@ -120,8 +127,8 @@ const Main = () => {
                             onKeyDown={(e) => e.key === "Enter" && input.trim().length > 1 && !loading ? onSent() : null}
                         />
                         <div>
-                            <img src={assets.gallery_icon} alt="" />
-                            <img src={assets.mic_icon} alt="" />
+                            <img src={assets.gallery_icon} alt="" onClick={()=>showToast("Upgrade your plan to use this feature.")}/>
+                            <img src={assets.mic_icon} alt="" onClick={()=>showToast("Feature coming soon..")}/>
                             <img
                                 src={assets.send_icon}
                                 alt=""
@@ -137,6 +144,7 @@ const Main = () => {
                     </div>
                 </div>
             </div>
+            {showTheToast && <Toast text={toast.text} status={toast.status} />}
         </div>
     )
 }

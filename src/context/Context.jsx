@@ -15,6 +15,21 @@ const ContextProvider = (props) => {
     const [chats, setChats] = useState([]);
     const [maxChatId, setMaxChatId] = useState(-1);
     const [loadingHistory, setLoadingHistory] = useState(false);
+    const [toast, setToast] = useState({
+        visible: false,
+        text: '',
+        status: 'info'
+    });
+
+
+    const showToast = (text, status = 'info') => {
+        setToast({ visible: true, text, status });
+
+        // Automatically hide the toast after 3 seconds
+        setTimeout(() => {
+            setToast({ visible: false, text: '', status: 'error' });
+        }, 3000);
+    };
 
     const delayPara = (index, nextWord) => {
         setTimeout(() => {
@@ -46,7 +61,7 @@ const ContextProvider = (props) => {
         const maxId = Number(localStorage.getItem('gemini-max-chat-id') || '0');
         setCurrentChatId(maxId + 1);
         setMaxChatId(maxId + 1);
-        localStorage.setItem("gemini-max-chat-id",maxId + 1);
+        localStorage.setItem("gemini-max-chat-id", maxId + 1);
         setChatHistory([]);
     }
 
@@ -71,7 +86,7 @@ const ContextProvider = (props) => {
                 chatId: currentChatId,
                 title: userInput
             });
-            localStorage.setItem("gemini-all-chats",JSON.stringify(chats));
+            localStorage.setItem("gemini-all-chats", JSON.stringify(chats));
         }
 
 
@@ -114,7 +129,9 @@ const ContextProvider = (props) => {
         currentChatId,
         chats,
         loadAllChats,
-        loadingHistory
+        loadingHistory,
+        toast,
+        showToast,
     }
 
     return (

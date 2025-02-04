@@ -5,43 +5,75 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gemini Clone</title>
+    <style>
+      /* Style for the toast notification */
+      .toast {
+        position: fixed;
+        bottom: 15vh;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4caf50;
+        background-color: #D3E2FD;
+        color: white;
+        color:#0842A0;
+        padding: 10px 20px;
+        border-radius: 3px;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    
+    <!-- Toast container -->
+    <div id="toast" class="toast"></div>
+    
     <script type="module" src="/src/main.jsx"></script>
     <script>
       function copyCode(e) {
-
-        try{
-
+        try {
           const codeBlock = e.closest('.code-box');
           const codeElement = codeBlock.querySelector('code');
           if (codeElement) {
-        // Create a temporary textarea to copy the text
-        const tempTextarea = document.createElement('textarea');
-        tempTextarea.value = codeElement.textContent; // Get the text content of the <code> element
-        document.body.appendChild(tempTextarea); // Append the textarea to the DOM
-        tempTextarea.select(); // Select the text in the textarea
+            // Create a temporary textarea to copy the text
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = codeElement.textContent; // Get the text content of the <code> element
+            document.body.appendChild(tempTextarea); // Append the textarea to the DOM
+            tempTextarea.select(); // Select the text in the textarea
 
-        // Use the Clipboard API to copy the text
-        navigator.clipboard.writeText(tempTextarea.value)
-          .then(() => {
-            console.log('Code copied to clipboard:', tempTextarea.value);
-          })
-          .catch((err) => {
-            console.error('Failed to copy code:', err);
-          });
+            // Use the Clipboard API to copy the text
+            navigator.clipboard.writeText(tempTextarea.value)
+              .then(() => {
+                showToast(); // Show the toast notification
+              })
+              .catch((err) => {
+                console.error('Failed to copy code:', err);
+              });
 
-        // Remove the temporary textarea
-        document.body.removeChild(tempTextarea);
+            // Remove the temporary textarea
+            document.body.removeChild(tempTextarea);
           }
+        } catch (e) {
+          console.log('Error:', e);
+        }
+      }
 
-        }
-        catch(e)
-        {
-          console.log('erre');
-        }
-      
+      // Show toast notification function
+      function showToast() {
+        const toast = document.getElementById('toast');
+        toast.textContent = "Code copied to clipboard!";
+        toast.classList.add('show'); // Add 'show' class to make the toast visible
+
+        // Automatically hide the toast after 3 seconds
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
       }
     </script>
   </body>
