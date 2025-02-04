@@ -1,9 +1,11 @@
-import run from '../config/gemini';
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
+import { db } from "../config/firebase"; // Firestore configuration
+import { collection, doc, setDoc, getDoc, getDocs, updateDoc, query, orderBy } from "firebase/firestore";
+import run from "../config/gemini";
+
 export const Context = createContext();
 
 const ContextProvider = (props) => {
-
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
     const [prevPrompt, setPrevPrompt] = useState([]);
@@ -21,11 +23,12 @@ const ContextProvider = (props) => {
         status: 'info'
     });
 
+    useEffect(() => {
+        loadAllChats();
+    }, []);
 
     const showToast = (text, status = 'info') => {
         setToast({ visible: true, text, status });
-
-        // Automatically hide the toast after 3 seconds
         setTimeout(() => {
             setToast({ visible: false, text: '', status: 'error' });
         }, 3000);
@@ -37,33 +40,50 @@ const ContextProvider = (props) => {
         }, 25 * index);
     };
 
-    const loadChat = (chatId) => {
+    const loadChat = async (chatId) => {
         setLoading(false);
         setResultData('');
         setShowResult(true);
         setCurrentChatId(chatId);
         setLoadingHistory(true);
-        const history = localStorage.getItem(`chatHistory${chatId}`) || '[]';
-        setChatHistory(JSON.parse(history));
-    }
+        
+        const docRef = doc(db, "chats", String(chatId));
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            setChatHistory(docSnap.data().messages);
+        } else {
+            setChatHistory([]);
+        }
+    };
 
-    const loadAllChats = () => {
-        const allChats = localStorage.getItem("gemini-all-chats") || '[]';
-        const maxChatId = Number(localStorage.getItem("gemini-max-chat-id") || '0');
-        setMaxChatId(maxChatId);
-        setChats(JSON.parse(allChats));
-    }
+    const loadAllChats = async () => {
+        const q = query(collection(db, "chats"), orderBy("chatId", "asc"));
+        const querySnapshot = await getDocs(q);
+        let loadedChats = [];
+        let maxId = 0;
+        querySnapshot.forEach((doc) => {
+            loadedChats.push(doc.data());
+            if (doc.data().chatId > maxId) maxId = doc.data().chatId;
+        });
+        setMaxChatId(maxId);
+        setChats(loadedChats);
+    };
 
-    const newChat = () => {
+    const newChat = async () => {
         setLoadingHistory(false);
         setLoading(false);
         setShowResult(false);
-        const maxId = Number(localStorage.getItem('gemini-max-chat-id') || '0');
-        setCurrentChatId(maxId + 1);
-        setMaxChatId(maxId + 1);
-        localStorage.setItem("gemini-max-chat-id", maxId + 1);
+        const newChatId = maxChatId + 1;
+        setCurrentChatId(newChatId);
+        setMaxChatId(newChatId);
         setChatHistory([]);
-    }
+        
+        await setDoc(doc(db, "chats", String(newChatId)), {
+            chatId: newChatId,
+            title: "New Chat",
+            messages: []
+        });
+    };
 
     const onSent = async (prompt) => {
         setLoadingHistory(false);
@@ -74,34 +94,24 @@ const ContextProvider = (props) => {
         let userInput = input;
         setInput('');
 
-        if(prompt !== undefined)
-            userInput = prompt;
+        if (prompt !== undefined) userInput = prompt;
 
-        let finded = false;
-        chats.forEach(chat => {
-            if (chat.chatId == currentChatId)
-                finded = true;
-        })
-
-        if (!finded) {
-            setPrevPrompt(prev => [...prev, input]);
-            chats.push({
+        let chatExists = chats.some(chat => chat.chatId === currentChatId);
+        if (!chatExists) {
+            setPrevPrompt(prev => [...prev, userInput]);
+            setChats([...chats, { chatId: currentChatId, title: userInput }]);
+            await setDoc(doc(db, "chats", String(currentChatId)), {
                 chatId: currentChatId,
-                title: userInput
+                title: userInput,
+                messages: []
             });
-            localStorage.setItem("gemini-all-chats", JSON.stringify(chats));
         }
-
 
         setRecentPrompt(userInput);
         response = await run(userInput, chatHistory);
 
-        // Remove the first word wrapped in triple backticks and any spaces after it
         let cleanedString = response.replace(/^```(\w+)\s*/, '');
-
-        // Remove triple backticks at the start or end of the string
-        let newResponseArr = cleanedString.replace(/^```|```$/g, '');;
-
+        let newResponseArr = cleanedString.replace(/^```|```$/g, '');
         let newResponseArray = newResponseArr.split(" ");
 
         for (let i = 0; i < newResponseArray.length; i++) {
@@ -109,11 +119,14 @@ const ContextProvider = (props) => {
             delayPara(i, nextWord + " ");
         }
         setLoading(false);
-        chatHistory.pop();
-        chatHistory.push({ role: "model", parts: [{ text: newResponseArr }] });
-        console.log(chatHistory);
-        localStorage.setItem(`chatHistory${currentChatId}`, JSON.stringify(chatHistory));
-    }
+        
+        let updatedChatHistory = [...chatHistory, { role: "model", parts: [{ text: newResponseArr }] }];
+        setChatHistory(updatedChatHistory);
+        
+        await updateDoc(doc(db, "chats", String(currentChatId)), {
+            messages: updatedChatHistory
+        });
+    };
 
     const contextValue = {
         prevPrompt,
@@ -135,12 +148,13 @@ const ContextProvider = (props) => {
         loadingHistory,
         toast,
         showToast,
-    }
+    };
 
     return (
         <Context.Provider value={contextValue}>
             {props.children}
-        </Context.Provider>);
-}
+        </Context.Provider>
+    );
+};
 
 export default ContextProvider;
