@@ -53,6 +53,9 @@
     color: #282828;
     cursor: pointer;
 }
+.sidebar.active .recent-entry{
+    margin: auto;
+}
 .sidebar .recent-entry:hover{
     background-color: #e2e6eb;
 }
