@@ -65,7 +65,7 @@ const ContextProvider = (props) => {
         setChatHistory([]);
     }
 
-    const onSent = async () => {
+    const onSent = async (prompt) => {
         setLoadingHistory(false);
         setResultData('');
         setLoading(true);
@@ -73,6 +73,9 @@ const ContextProvider = (props) => {
         let response = "";
         let userInput = input;
         setInput('');
+
+        if(prompt !== undefined)
+            userInput = prompt;
 
         let finded = false;
         chats.forEach(chat => {

@@ -6,7 +6,7 @@ import Toast from '../Toast/Toast';
 
 const Main = () => {
 
-    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory,loadAllChats,toast,showToast } = useContext(Context);
+    const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, chatHistory, newChat, loadingHistory, loadAllChats, toast, showToast } = useContext(Context);
 
     useEffect(() => {
         // localStorage.clear();
@@ -14,11 +14,15 @@ const Main = () => {
         newChat();
     }, []);
 
+    const activateCard = (prompt) => {
+        onSent(prompt);
+    }
+
     const [showTheToast, setShowTheToast] = React.useState(false);
 
     useEffect(() => {
         setShowTheToast(toast.visible); // Update local state when toast.visible changes
-    }, [toast.visible]); 
+    }, [toast.visible]);
 
     const messagesEndRef = React.useRef(null);
 
@@ -44,20 +48,20 @@ const Main = () => {
                             <p>How can i help you today?</p>
                         </div>
                         <div className="cards">
-                            <div className="card">
-                                <p>Suggest Beautiful places to see on an upcoming road trip?</p>
+                            <div className="card" onClick={() => activateCard("Discover Breathtaking Destinations for Your Next Road Trip")}>
+                                <p>Discover Breathtaking Destinations for Your Next Road Trip</p>
                                 <img src={assets.compass_icon} alt="" />
                             </div>
-                            <div className="card">
-                                <p>Find the best restaurants in town?</p>
+                            <div className="card" onClick={() => activateCard("Unlock Innovative Ideas for the Future of Smart Cities")}>
+                                <p>Unlock Innovative Ideas for the Future of Smart Cities</p>
                                 <img src={assets.bulb_icon} alt="" />
                             </div>
-                            <div className="card">
-                                <p>Discover new hiking trails nearby?</p>
+                            <div className="card" onClick={() => activateCard("Get Personalized Recommendations for Local Events and Activities")}>
+                                <p>Get Personalized Recommendations for Local Events and Activities</p>
                                 <img src={assets.message_icon} alt="" />
                             </div>
-                            <div className="card">
-                                <p>Explore popular tourist attractions?</p>
+                            <div className="card" onClick={() => activateCard("Master Python: Rotate Arrays with Simple Code")}>
+                                <p>Master Python: Rotate Arrays with Simple Code</p>
                                 <img src={assets.code_icon} alt="" />
                             </div>
                         </div>
@@ -127,8 +131,8 @@ const Main = () => {
                             onKeyDown={(e) => e.key === "Enter" && input.trim().length > 1 && !loading ? onSent() : null}
                         />
                         <div>
-                            <img src={assets.gallery_icon} alt="" onClick={()=>showToast("Upgrade your plan to use this feature.")}/>
-                            <img src={assets.mic_icon} alt="" onClick={()=>showToast("Feature coming soon..")}/>
+                            <img src={assets.gallery_icon} alt="" onClick={() => showToast("Upgrade your plan to use this feature.")} />
+                            <img src={assets.mic_icon} alt="" onClick={() => showToast("Feature coming soon..")} />
                             <img
                                 src={assets.send_icon}
                                 alt=""
