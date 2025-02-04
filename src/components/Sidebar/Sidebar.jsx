@@ -6,8 +6,10 @@ import { Context } from '../../context/Context';
 const Sidebar = () => {
 
     const [extended , setExtended] = React.useState(false);
-    const {newChat, currentChatId, chats, loadChat } = React.useContext(Context);
+    const {newChat, currentChatId, chats, loadChat,showToast } = React.useContext(Context);
 
+
+   
 
   return (
     <div className={`sidebar`}>
@@ -33,15 +35,15 @@ const Sidebar = () => {
             </div> : null}
         </div>
         <div className="bottom">
-            <div className="bottom-item recent-entry">
+            <div className="bottom-item recent-entry" onClick={()=>showToast("Feature coming soon..")}>
                 <img src={assets.question_icon} alt="" />
                 {extended? <p>Help</p> : null}
             </div>
-            <div className="bottom-item recent-entry">
+            <div className="bottom-item recent-entry" onClick={()=>showToast("Feature coming soon..")}>
                 <img src={assets.history_icon} alt="" />
                 {extended? <p>History</p> : null}
             </div>
-            <div className="bottom-item recent-entry">
+            <div className="bottom-item recent-entry" onClick={()=>showToast("Feature coming soon..")}>
                 <img src={assets.setting_icon} alt="" />
                 {extended? <p>Settings</p> : null}
             </div>
