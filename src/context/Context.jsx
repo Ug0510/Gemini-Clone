@@ -1,6 +1,8 @@
 import run from '../config/gemini';
 import { createContext, useState } from "react";
 export const Context = createContext();
+import { db } from '../config/firebase';
+import { getDoc, updateDoc, doc } from "firebase/firestore";
 
 const ContextProvider = (props) => {
 
@@ -20,7 +22,8 @@ const ContextProvider = (props) => {
         text: '',
         status: 'info'
     });
-
+    const [firebaseOn, setFirebaseOn] = useState(true);
+    const docOtherRef = doc(db, "gemini-all-chats", '05102002');
 
     const showToast = (text, status = 'info') => {
         setToast({ visible: true, text, status });
@@ -37,31 +40,107 @@ const ContextProvider = (props) => {
         }, 25 * index);
     };
 
-    const loadChat = (chatId) => {
+    const loadChat = async (chatId) => {
         setLoading(false);
         setResultData('');
         setShowResult(true);
         setCurrentChatId(chatId);
         setLoadingHistory(true);
-        const history = localStorage.getItem(`chatHistory${chatId}`) || '[]';
-        setChatHistory(JSON.parse(history));
+        const messageId = `chatHistory${chatId}`;
+        let history = [];
+
+        if (firebaseOn) {
+            // Fetch the document from Firestore
+            const docSnap = await getDoc(docOtherRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data() || {};
+                // Access the dynamic field based on messageId
+                history = data[messageId] || [];
+            } else {
+                // If document doesn't exist, create it with an empty array for the dynamic field
+                await updateDoc(docOtherRef, {
+                    [messageId]: [] // Using computed property syntax
+                });
+                history = [];
+            }
+
+            // Set the fetched or initialized chat history
+            setChatHistory(history);
+        } else {
+            // Handle localStorage case
+            const storedHistory = localStorage.getItem(messageId);
+            history = storedHistory ? JSON.parse(storedHistory) : [];
+            setChatHistory(history);
+        }
+
+
     }
 
-    const loadAllChats = () => {
-        const allChats = localStorage.getItem("gemini-all-chats") || '[]';
-        const maxChatId = Number(localStorage.getItem("gemini-max-chat-id") || '0');
-        setMaxChatId(maxChatId);
-        setChats(JSON.parse(allChats));
+    const loadAllChats = async () => {
+        if (firebaseOn) {
+            const docSnap = await getDoc(docOtherRef);
+
+            if (docSnap.exists) {
+                const data = docSnap.data() || {};  // Ensure data is an object if docSnap is valid
+                const allChats = data.chats || [];  // Default to empty array if chats is undefined
+                const maxChatId = data.maxChatId || 0;  // Default to 0 if maxChatId is undefined
+
+                setChats(allChats);
+                setMaxChatId(maxChatId);
+            } else {
+                // Add the document with initial data if it doesn't exist
+                await updateDoc(docOtherRef, {
+                    chats: [],
+                    maxChatId: 0
+                });
+
+                // Optionally, you can update the state here as well
+                setChats([]);
+                setMaxChatId(0);
+            }
+        } else {
+            const allChats = localStorage.getItem("gemini-all-chats") || '[]'; // Use '[]' if null or undefined
+            const maxChatId = Number(localStorage.getItem("gemini-max-chat-id") || '0'); // Default to 0 if undefined or null
+            setMaxChatId(maxChatId);
+            setChats(JSON.parse(allChats));
+        }
     }
 
-    const newChat = () => {
+
+
+    const newChat = async () => {
         setLoadingHistory(false);
         setLoading(false);
         setShowResult(false);
-        const maxId = Number(localStorage.getItem('gemini-max-chat-id') || '0');
-        setCurrentChatId(maxId + 1);
-        setMaxChatId(maxId + 1);
-        localStorage.setItem("gemini-max-chat-id", maxId + 1);
+
+        if (firebaseOn) {
+            const docSnap = await getDoc(docOtherRef);
+            if (docSnap.exists) {
+                const data = docSnap.data() || {};
+                const maxId = data.maxChatId || 0;
+                setCurrentChatId(maxId + 1);
+                setMaxChatId(maxId + 1);
+                await updateDoc(docOtherRef, {
+                    maxChatId: maxId + 1
+                });
+            }
+            else {
+                // Add the document with initial data
+                await updateDoc(docOtherRef, {
+                    maxChatId: 0
+                });
+
+                // Optionally, you can update the state here as well
+                setMaxChatId(0);
+            }
+
+        }
+        else {
+            const maxId = Number(localStorage.getItem('gemini-max-chat-id') || '0');
+            setCurrentChatId(maxId + 1);
+            setMaxChatId(maxId + 1);
+            localStorage.setItem("gemini-max-chat-id", maxId + 1);
+        }
         setChatHistory([]);
     }
 
@@ -74,7 +153,7 @@ const ContextProvider = (props) => {
         let userInput = input;
         setInput('');
 
-        if(prompt !== undefined)
+        if (prompt !== undefined)
             userInput = prompt;
 
         let finded = false;
@@ -85,11 +164,18 @@ const ContextProvider = (props) => {
 
         if (!finded) {
             setPrevPrompt(prev => [...prev, input]);
-            chats.push({
+            chats.unshift({
                 chatId: currentChatId,
                 title: userInput
             });
-            localStorage.setItem("gemini-all-chats", JSON.stringify(chats));
+
+            if (firebaseOn) {
+                await updateDoc(docOtherRef, {
+                    chats: chats
+                });
+            }
+            else
+                localStorage.setItem("gemini-all-chats", JSON.stringify(chats));
         }
 
 
@@ -111,8 +197,16 @@ const ContextProvider = (props) => {
         setLoading(false);
         chatHistory.pop();
         chatHistory.push({ role: "model", parts: [{ text: newResponseArr }] });
-        console.log(chatHistory);
-        localStorage.setItem(`chatHistory${currentChatId}`, JSON.stringify(chatHistory));
+
+        if (firebaseOn) {
+            await updateDoc(docOtherRef, {
+                [`chatHistory${currentChatId}`]: chatHistory
+            })
+        }
+        else {
+            localStorage.setItem(`chatHistory${currentChatId}`, JSON.stringify(chatHistory));
+        }
+
     }
 
     const contextValue = {

@@ -10,13 +10,13 @@ const Main = () => {
 
     useEffect(() => {
         // localStorage.clear();
-        loadAllChats();
-        newChat();
+        async function setup() {
+            await loadAllChats();
+            await newChat();
+        }
+        setup();
     }, []);
 
-    const activateCard = (prompt) => {
-        onSent(prompt);
-    }
 
     const [showTheToast, setShowTheToast] = React.useState(false);
 
@@ -48,19 +48,19 @@ const Main = () => {
                             <p>How can i help you today?</p>
                         </div>
                         <div className="cards">
-                            <div className="card" onClick={() => activateCard("Discover Breathtaking Destinations for Your Next Road Trip")}>
+                            <div className="card" onClick={async () => await onSent("Discover Breathtaking Destinations for Your Next Road Trip")}>
                                 <p>Discover Breathtaking Destinations for Your Next Road Trip</p>
                                 <img src={assets.compass_icon} alt="" />
                             </div>
-                            <div className="card" onClick={() => activateCard("Unlock Innovative Ideas for the Future of Smart Cities")}>
+                            <div className="card" onClick={async () => await onSent("Unlock Innovative Ideas for the Future of Smart Cities")}>
                                 <p>Unlock Innovative Ideas for the Future of Smart Cities</p>
                                 <img src={assets.bulb_icon} alt="" />
                             </div>
-                            <div className="card" onClick={() => activateCard("Get Personalized Recommendations for Local Events and Activities")}>
+                            <div className="card" onClick={async () => await onSent("Get Personalized Recommendations for Local Events and Activities")}>
                                 <p>Get Personalized Recommendations for Local Events and Activities</p>
                                 <img src={assets.message_icon} alt="" />
                             </div>
-                            <div className="card" onClick={() => activateCard("Master Python: Rotate Arrays with Simple Code")}>
+                            <div className="card" onClick={async () => await onSent("Master Python: Rotate Arrays with Simple Code")}>
                                 <p>Master Python: Rotate Arrays with Simple Code</p>
                                 <img src={assets.code_icon} alt="" />
                             </div>
@@ -99,9 +99,12 @@ const Main = () => {
                                     }
                                 }
                             })) : null}
-                        <div className="result-title">
+                        
+                            
+                            
+                            <div className="result-title">
                             <img src={assets.user_icon} alt="" />
-                            {loadingHistory ? <p dangerouslySetInnerHTML={{ __html: chatHistory[chatHistory.length - 2].parts[0].text }}></p> : <p>{recentPrompt}</p>}
+                            {loadingHistory ? (chatHistory && chatHistory.length !== 0 ? <p dangerouslySetInnerHTML={{ __html: chatHistory[chatHistory.length - 2].parts[0].text }}></p> : null) : <p>{recentPrompt}</p>}
                         </div>
                         <div className="result-data">
                             <img src={assets.gemini_icon} alt="" />
@@ -113,7 +116,7 @@ const Main = () => {
                                         <hr />
                                     </div>
                                     :
-                                    loadingHistory ? <p dangerouslySetInnerHTML={{ __html: chatHistory[chatHistory.length - 1].parts[0].text }}></p> : <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
+                                    loadingHistory ? (chatHistory && chatHistory.length !== 0 ? <p dangerouslySetInnerHTML={{ __html: chatHistory[chatHistory.length - 1].parts[0].text }}></p> : null) : <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
                             }
                         </div>
                         <div ref={messagesEndRef} />

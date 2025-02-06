@@ -24,7 +24,7 @@ const Sidebar = () => {
                 {
                     chats.map((chat, index) => {
                         return (
-                            <div className={`recent-entry ${chat.chatId === currentChatId ? "active" : ''} `} key={chat.chatId} onClick={() => loadChat(chat.chatId)}>
+                            <div className={`recent-entry ${chat.chatId === currentChatId ? "active" : ''} `} key={chat.chatId} onClick={async () => await loadChat(chat.chatId)}>
                             <img src={assets.message_icon} alt="" />
                             <p>{chat['title'].length <= 30? chat['title'] : chat['title'].slice(0,28) + "..."}</p>
                         </div>
