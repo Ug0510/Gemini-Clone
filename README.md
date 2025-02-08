@@ -1,6 +1,6 @@
 # 🌌 Gemini Clone - AI-Powered Chat Interface
 
-<video src="https://github.com/user-attachments/assets/95ebf288-9372-4fce-b560-cf54f9199cf2"></video>
+<video src="https://github.com/user-attachments/assets/95ebf288-9372-4fce-b560-cf54f9199cf2" style="margin:auto; display:block;"></video>
 
 demo link: <a href="https://gemini.udit-gupta.com/">gemini.udit-gupta.com</a>
 
