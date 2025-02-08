@@ -1,5 +1,7 @@
 # 🌌 Gemini Clone - AI-Powered Chat Interface
 
+https://github.com/user-attachments/assets/95ebf288-9372-4fce-b560-cf54f9199cf2
+
 An intelligent chatbot interface powered by Google's Gemini GenAI API, featuring modern UI/UX design and seamless cloud synchronization.
 
 ## ✨ Features
